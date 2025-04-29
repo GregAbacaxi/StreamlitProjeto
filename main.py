@@ -42,22 +42,37 @@ for row_idx, row_title in enumerate(row_titles):
         with cols[col_idx]:
             st.image(images[row_idx * 3 + col_idx], caption=col_title, width=300, use_container_width=True)
 
-st.title("Melhores dos Melhores")
+st.title("Melhores em cenários de utilização real")
 melhores_imagens = []
-melhores_imagens.append(f"benchs/83/sata-onboard/raidz2_async/4k/raidz2_async_randread_4k_iops.png")
-melhores_imagens.append(f"benchs/83/sata-onboard/raidz2_async/1M/raidz2_async_randread_1M_bw.png")
-melhores_imagens.append(f"benchs/83/sata-onboard/raidz2_async/4k/raidz2_async_randread_4k_lat.png")
-best_iops = melhores_imagens[0]  
-best_bw = melhores_imagens[1]    
-best_lat = melhores_imagens[2]   
+melhores_imagens.append(f"benchs/84/sas-sas/raidz2_async/randrw/4k/raidz2_async_randrw_read_4k_iops.png")
+melhores_imagens.append(f"benchs/83/sas-sas/raidz2_async/randrw/1M/raidz2_async_randrw_read_1M_bw.png")
+melhores_imagens.append(f"benchs/84/sata-sas/raidz2_async/randrw/4k/raidz2_async_randrw_read_4k_lat.png")
+melhores_imagens.append(f"benchs/84/sas-sas/raidz2_async/randrw/4k/raidz2_async_randrw_write_4k_iops.png")
+melhores_imagens.append(f"benchs/83/sas-sas/raidz2_async/randrw/512k/raidz2_async_randrw_write_512k_bw.png")
+melhores_imagens.append(f"benchs/84/sata-sas/raidz2_async/randrw/4k/raidz2_async_randrw_write_4k_lat.png")
+best_iops_r = melhores_imagens[0]  
+best_bw_r = melhores_imagens[1]    
+best_lat_r = melhores_imagens[2]   
+best_iops_w = melhores_imagens[3]  
+best_bw_w = melhores_imagens[4]    
+best_lat_w = melhores_imagens[5]
 
-st.markdown("### Melhor IOPS")
-st.image(best_iops, caption="Melhor IOPS", width=300, use_container_width=True)
+st.markdown("### Melhor IOPS de Leitura")
+st.image(best_iops_r, caption="Melhor IOPS de Leitura", width=300, use_container_width=True)
 
-st.markdown("### Melhor Bandwidth")
-st.image(best_bw, caption="Melhor Bandwidth", width=300, use_container_width=True)
+st.markdown("### Melhor Bandwidth de Leitura")
+st.image(best_bw_r, caption="Melhor Bandwidth de Leitura", width=300, use_container_width=True)
 
-st.markdown("### Melhor Latência")
-st.image(best_lat, caption="Melhor Latência", width=300, use_container_width=True)
+st.markdown("### Melhor Latência de Leitura")
+st.image(best_lat_r, caption="Melhor Latência de Leitura", width=300, use_container_width=True)
 
-st.write("G.U. - J.R. - P.D // 2025 // v1.2")
+st.markdown("### Melhor IOPS de Escrita")
+st.image(best_iops_w, caption="Melhor IOPS de Escrita", width=300, use_container_width=True)
+
+st.markdown("### Melhor Bandwidth de Escrita")
+st.image(best_bw_w, caption="Melhor Bandwidth de Escrita", width=300, use_container_width=True)
+
+st.markdown("### Melhor Latência de Escrita")
+st.image(best_lat_w, caption="Melhor Latência de Escrita", width=300, use_container_width=True)
+
+st.write("G.U. - J.R. - P.D // 2025 // v1.3")
