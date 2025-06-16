@@ -10,9 +10,9 @@ def get_images(rw, blocksize, filter, machine, io_type):
         for n in [1, 2]:
             for mode in MODES:
                 if rw == 'randrw':
-                    path = f"benchs/{machine}/beegfs_client_1cx{n}s_{rw}_{filter}_{blocksize}_{mode}.png"
+                    path = f"benchs/{machine}/beegfs_client_1c{n}s_{rw}_{filter}_{blocksize}_{mode}.png"
                 else:
-                    path = f"benchs/{machine}/beegfs_client_1cx{n}s_{rw}_{blocksize}_{mode}.png"
+                    path = f"benchs/{machine}/beegfs_client_1c{n}s_{rw}_{blocksize}_{mode}.png"
                 lista_imagens.append(path)
         return lista_imagens
 
@@ -71,4 +71,4 @@ else:
             with cols[col_idx]:
                 st.image(images[row_idx * 3 + col_idx], caption=col_title, width=300, use_container_width=True)
 
-st.write("G.U. - J.R. - P.D // 2025 // v1.4")
+st.write("G.U. - J.R. - P.D // 2025 // v1.5")
