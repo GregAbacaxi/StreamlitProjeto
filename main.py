@@ -2,24 +2,36 @@ import streamlit as st
 
 DEVICES = ['raidz2_sync', 'raidz2_async', 'raid6_xfs']
 MODES = ['bw', 'iops', 'lat']
-special_beegfs = ['beegfs_1s_x_2s', 'beegfs_1s_x_storage_84', 'beegfs_2s_x_storage_avg']
+
+special_beegfs = [
+    'beegfs_1s_x_2s',
+    'beegfs_1s_x_storage_84',
+    'beegfs_2s_x_storage_avg'
+]
+special_lustre = [
+    'lustre_1s_x_2s',
+    'lustre_1s_x_storage_83',
+    'lustre_2s_x_storage_avg'
+]
 
 def get_images(rw, blocksize, filter_type, machine, io_type):
-    if machine == 'beegfs':
+    # Caso beegfs/lustre "base"
+    if machine in ['beegfs', 'lustre']:
         imgs = []
         for n in [1, 2]:
             for mode in MODES:
                 if rw == 'randrw':
                     imgs.append(
-                        f"benchs/{machine}/beegfs_client_1c{n}s_{rw}_{filter_type}_{blocksize}_{mode}.png"
+                        f"benchs/{machine}/{machine}_client_1c{n}s_{rw}_{filter_type}_{blocksize}_{mode}.png"
                     )
                 else:
                     imgs.append(
-                        f"benchs/{machine}/beegfs_client_1c{n}s_{rw}_{blocksize}_{mode}.png"
+                        f"benchs/{machine}/{machine}_client_1c{n}s_{rw}_{blocksize}_{mode}.png"
                     )
         return imgs
 
-    if machine in special_beegfs:
+    # Casos especiais beegfs/lustre com randrw read/write
+    if machine in special_beegfs + special_lustre:
         imgs = []
         rows = [
             ('randread', None),
@@ -41,16 +53,18 @@ def get_images(rw, blocksize, filter_type, machine, io_type):
                     )
         return imgs
 
-    if machine == 'beegfs_ior':
+    # beegfs/lustre IOR
+    if machine in ['beegfs_ior', 'lustre_ior']:
         imgs = []
         for n in ['1s', '2s']:
             for mode in MODES:
                 imgs.append(
-                    f"benchs/beegfs_ior_{n}/{blocksize}/"
-                    f"beegfs_ior_{n}_{rw}_{blocksize}_{mode}.png"
+                    f"benchs/{machine}_{n}/{blocksize}/"
+                    f"{machine}_{n}_{rw}_{blocksize}_{mode}.png"
                 )
         return imgs
 
+    # Caso genérico ZFS/XFS
     imgs = []
     for device in DEVICES:
         for mode in MODES:
@@ -66,6 +80,7 @@ def get_images(rw, blocksize, filter_type, machine, io_type):
                 )
     return imgs
 
+
 # Layout da página
 st.set_page_config(layout="wide")
 st.title("Grelha Dinâmica de Imagens")
@@ -73,20 +88,20 @@ st.title("Grelha Dinâmica de Imagens")
 with st.sidebar:
     machine = st.selectbox(
         "Escolha a máquina",
-        ['83', '84', 'beegfs', 'beegfs_ior'] + special_beegfs
+        ['83', '84', 'beegfs', 'lustre', 'beegfs_ior', 'lustre_ior'] + special_beegfs + special_lustre
     )
 
     io_type = None
-    if machine not in ['beegfs', 'beegfs_ior'] + special_beegfs:
+    if machine not in ['beegfs', 'lustre', 'beegfs_ior', 'lustre_ior'] + special_beegfs + special_lustre:
         all_io = ['sata-onboard', 'sata-sas', 'sas-sas']
         io_options = [io for io in all_io if not (machine == '84' and io == 'sata-onboard')]
         io_type = st.selectbox("Escolha o controlador I/O", io_options)
 
     blocksize = st.selectbox("Escolha o blocksize", ["1M", "512k", "4k"])
 
-    if machine in ['beegfs_ior']:
+    if machine in ['beegfs_ior', 'lustre_ior']:
         rw = st.selectbox("Escolha o rw", ["read", "write"])
-    elif machine not in special_beegfs:
+    elif machine not in special_beegfs + special_lustre:
         rw = st.selectbox("Escolha o rw", ["randread", "randwrite", "randrw"])
     else:
         rw = None
@@ -109,9 +124,9 @@ st.write("**Opções selecionadas:** " + " ".join(selecionadas))
 images = get_images(rw, blocksize, filter_type, machine, io_type)
 col_titles = ["Bandwidth", "IOPS", "Latência"]
 
-if machine in special_beegfs:
+if machine in special_beegfs + special_lustre:
     row_titles = ["randread", "randwrite", "randrw read", "randrw write"]
-elif machine in ['beegfs', 'beegfs_ior']:
+elif machine in ['beegfs', 'lustre', 'beegfs_ior', 'lustre_ior']:
     row_titles = ["1 Storage", "2 Storage"]
 else:
     row_titles = ["ZFS Sync", "ZFS Async", "XFS"]
@@ -124,4 +139,4 @@ for row_idx, row_title in enumerate(row_titles):
             st.image(images[row_idx * 3 + col_idx], caption=col_title, width=300, use_container_width=True)
 
 # Rodapé
-st.write("G.U. - J.R. - P.D // 2025 // v1.7")
+st.write("G.U. - J.R. - P.D // 2025 // v1.8")
