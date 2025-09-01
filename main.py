@@ -14,9 +14,14 @@ special_lustre = [
     'lustre_2s_x_storage_avg'
 ]
 
-# Casos especiais
 special_clients = ['lustre_2_clients']
-special_multi = ['lustre_2c_2s']   # Novo caso
+special_multi = ['lustre_2c_2s']
+
+special_new = [
+    'beegfs_2c_2s',
+    'lustre_4c_2s',
+    'lustre_4c_1s'
+]
 
 
 def get_images(rw, blocksize, filter_type, machine, io_type):
@@ -69,19 +74,8 @@ def get_images(rw, blocksize, filter_type, machine, io_type):
                 )
         return imgs
 
-    # Novo caso lustre_2_clients (2x3 fixo)
-    if machine in special_clients:
-        imgs = []
-        for rw_val in ["read", "write"]:
-            for mode in MODES:
-                imgs.append(
-                    f"benchs/{machine}/"
-                    f"{machine}_{rw_val}_{blocksize}_{mode}.png"
-                )
-        return imgs
-
-    # Novo caso lustre_2c_2s (2x3 fixo)
-    if machine in special_multi:
+    # Casos fixos tipo 2x3 (read/write)
+    if machine in special_clients + special_multi + special_new:
         imgs = []
         for rw_val in ["read", "write"]:
             for mode in MODES:
@@ -116,13 +110,13 @@ with st.sidebar:
     machine = st.selectbox(
         "Escolha a máquina",
         ['83', '84', 'beegfs', 'lustre', 'beegfs_ior', 'lustre_ior']
-        + special_beegfs + special_lustre + special_clients + special_multi
+        + special_beegfs + special_lustre + special_clients + special_multi + special_new
     )
 
     io_type = None
     if machine not in (
         ['beegfs', 'lustre', 'beegfs_ior', 'lustre_ior']
-        + special_beegfs + special_lustre + special_clients + special_multi
+        + special_beegfs + special_lustre + special_clients + special_multi + special_new
     ):
         all_io = ['sata-onboard', 'sata-sas', 'sas-sas']
         io_options = [io for io in all_io if not (machine == '84' and io == 'sata-onboard')]
@@ -132,8 +126,8 @@ with st.sidebar:
 
     if machine in ['beegfs_ior', 'lustre_ior']:
         rw = st.selectbox("Escolha o rw", ["read", "write"])
-    elif machine in special_clients + special_multi:
-        rw = None  # Não mostra seletor de rw
+    elif machine in special_clients + special_multi + special_new:
+        rw = None
     elif machine not in special_beegfs + special_lustre:
         rw = st.selectbox("Escolha o rw", ["randread", "randwrite", "randrw"])
     else:
@@ -161,7 +155,7 @@ if machine in special_beegfs + special_lustre:
     row_titles = ["randread", "randwrite", "randrw read", "randrw write"]
 elif machine in ['beegfs', 'lustre', 'beegfs_ior', 'lustre_ior']:
     row_titles = ["1 Storage", "2 Storage"]
-elif machine in special_clients + special_multi:
+elif machine in special_clients + special_multi + special_new:
     row_titles = ["Read", "Write"]
 else:
     row_titles = ["ZFS Sync", "ZFS Async", "XFS"]
@@ -174,4 +168,4 @@ for row_idx, row_title in enumerate(row_titles):
             st.image(images[row_idx * 3 + col_idx], caption=col_title, width=300, use_container_width=True)
 
 # Rodapé
-st.write("G.U. - J.R. - P.D // 2025 // v1.8.3")
+st.write("G.U. - J.R. - P.D // 2025 // v1.9")
