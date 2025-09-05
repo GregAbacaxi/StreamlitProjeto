@@ -14,13 +14,14 @@ special_lustre = [
     'lustre_2s_x_storage_avg'
 ]
 
+# Casos 2x3 fixos
 special_clients = ['lustre_2_clients']
 special_multi = ['lustre_2c_2s']
-
 special_new = [
     'beegfs_2c_2s',
     'lustre_4c_2s',
-    'lustre_4c_1s'
+    'lustre_4c_1s',
+    'beegfs_2c_1s'   # 🔥 Novo caso
 ]
 
 
@@ -168,4 +169,4 @@ for row_idx, row_title in enumerate(row_titles):
             st.image(images[row_idx * 3 + col_idx], caption=col_title, width=300, use_container_width=True)
 
 # Rodapé
-st.write("G.U. - J.R. - P.D // 2025 // v1.9")
+st.write("G.U. - J.R. - P.D // 2025 // v1.9.1")
